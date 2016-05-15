@@ -3,15 +3,14 @@
 ## Procedura: każda osoba ma oceniać i zapamiętać 30 przymiotników
 ## neg, neu i poz. Czas prezentacji każdego słowa jest stały.
 ##
-if(is.null(USER.DATA$name)){
-    if(interactive())source('~/cs/code/r/tasks/task/task.R')
-}
+if(interactive())source('~/cs/code/r/tasks/task/task.R')
 TASK.NAME <<- 'mcmassc16'
 
 NOF.ITEMS = 10
 FIXATION.TIME = 1000
 POST.FIXATION.TIME = 1000
 PRESENTATION.TIME = 5000
+QUICK.SCALE = F ## czekamy, aż minie presentation time, zanim zniknie oceniane słowo
 
 d = read.csv('slowa_final.csv')
 neg = sample(tolower(as.character(d$słowo[(d$emocja == 'neg') & (d$rodzaj == 'p')])), NOF.ITEMS)
@@ -94,8 +93,8 @@ mcm.trial.code = function(trial, word = 'test', samegender = 'same', scale = 'em
                 WINDOW$draw(TXT)
                 value = draw.scale(scales[[as.character(scale)]][-1], position = .7)[1]
             }else{
-                ## Słowo pokazujemy do końca czasu pokazywania słowa
-                if((CLOCK$time - scale.onset) > PRESENTATION.TIME)state = 'done'
+                ## Słowo pokazujemy do końca czasu pokazywania słowa, chyba, że QUICK.SCALE
+                if(((CLOCK$time - scale.onset) > PRESENTATION.TIME) | QUICK.SCALE)state = 'done'
             }
             WINDOW$display()
         }, 'done' = {
@@ -286,6 +285,7 @@ Pozycja kursora przy ocenie słów ma znaczenie - pozycja skrajnie z lewej stron
 Samo położenie kursora myszki nie wystarczy, należy jeszcze potwierdzić ocenę klikając lewy przycisk myszki.")
 
 scales = list(emotion = c('', 'Na pewno nie było', 'Raczej nie było', 'Nie wiem', 'Raczej było', 'Na pewno było'))
+QUICK.SCALE = T
 run.trials(mcm.trial.code, expand.grid(scale = 'emotion', samegender = 'same',
                                    word = c(sample(neg.new)[1:NOF.ITEMS], sample(neu.new)[1:NOF.ITEMS], sample(pos.new)[1:NOF.ITEMS])),
            record.session = T,
