@@ -12,18 +12,7 @@ POST.FIXATION.TIME = 1000
 PRESENTATION.TIME = 5000
 QUICK.SCALE = F ## czekamy, aż minie presentation time, zanim zniknie oceniane słowo
 
-d = read.csv('slowa_final.csv')
-neg = sample(tolower(as.character(d$słowo[(d$emocja == 'neg') & (d$rodzaj == 'p')])), NOF.ITEMS)
-neu = sample(tolower(as.character(d$słowo[(d$emocja == 'neu') & (d$rodzaj == 'p')])), NOF.ITEMS)
-pos = sample(tolower(as.character(d$słowo[(d$emocja == 'poz') & (d$rodzaj == 'p')])), NOF.ITEMS)
-
-## Nowe słowa do testu rozpoznawania
-neg.new = tolower(as.character(d$słowo[(d$emocja == 'neg') & (d$rodzaj == 'p')]))
-neu.new = tolower(as.character(d$słowo[(d$emocja == 'neu') & (d$rodzaj == 'p')]))
-pos.new = tolower(as.character(d$słowo[(d$emocja == 'poz') & (d$rodzaj == 'p')]))
-neg.new = setdiff(neg.new, neg)
-neu.new = setdiff(neu.new, neu)
-pos.new = setdiff(pos.new, pos)
+words = readRDS('slowa.RDS')
 
 WINDOW$set.visible(T)
 WINDOW$set.mouse.cursor.visible(T)
@@ -113,7 +102,19 @@ if(is.null(USER.DATA$name)){
 Za chwilę zostaniesz poproszona/y o podanie danych: wieku, płci oraz pseudonimu.  Pseudonim składa się z inicjałów (małymi literami) oraz czterech cyfr: dnia i miesiąca urodzenia (np.  ms0706).")
 gui.user.data() }
 
-cnd = 'recognition' ## albo 'recall'
+cnd = db.random.condition(c('recognition', 'recall'))
+
+gui.show.instruction("Teraz rozpocznie się etap polegający na wypełnieniu kilku kwestionariuszy. W każdym z kwestionariuszy prosimy zapoznać się z instrukcją.")
+
+## PANAS-C
+
+gui.show.instruction('Skala, która się za chwilę pojawi, składa się ze słów nazywających różne emocje i uczucia. Przeczytaj każde słowo i zastanów się jak się czujesz ZAZWYCZAJ.')
+
+gui.quest(c('aktywny(a)', '"jak na szpilkach"', 'mocny(a)', 'nerwowy(a)', 'ożywiony(a)', 'pełen (pełna) zapału', 'przerażony(a)', 'raźny(a)', 'silny(a)', 'winny(a)',
+            'wystraszony(a)', 'zalękniony(a)', 'zaniepokojony(a)', 'zapalony(a)', 'zawstydzony(a)', 'zdecydowany(a)', 'zdenerwowany(a)', 'zmartwiony(a)', 'żwawy(a)', 'żywy(a)'),
+          c('nieznacznie lub wcale', 'trochę', 'umiarkowanie', 'dość mocno', 'bardzo silnie'))
+
+## Instrukcja przed etapem zapamiętywania
 
 gui.show.instruction("Teraz rozpocznie się zadanie wymagające zapamiętywania i oceny słów. Na ekranie komputera będą się pojawiały, jedno po drugim, różne słowa. Każde słowo będzie wyświetlane przez kilka sekund.
 
@@ -125,8 +126,9 @@ Samo położenie kursora myszki nie wystarczy, należy jeszcze potwierdzić ocen
 
 Należy starać się zapamiętywać wszystkie prezentowane i oceniane słowa, ponieważ na końcu badania będzie trzeba spróbować je sobie przypomnieć.")
 
+memset = sample(1:nrow(words), NOF.ITEMS)
 run.trials(mcm.trial.code, expand.grid(scale = 'emotion', samegender = 'same',
-                                   word = c(sample(neg), sample(neu), sample(pos))),
+                                   word = as.vector(as.matrix(words[memset,]))),
            record.session = T,
            condition = cnd)
 
@@ -286,8 +288,10 @@ Samo położenie kursora myszki nie wystarczy, należy jeszcze potwierdzić ocen
 
 scales = list(emotion = c('', 'Na pewno nie było', 'Raczej nie było', 'Nie wiem', 'Raczej było', 'Na pewno było'))
 QUICK.SCALE = T
+## Tutaj dajemy wszystkie stare i taką samą liczbę nowych bodźców
+memset2 = c(memset, sample((1:nrow(d))[-memset], NOF.ITEMS))
 run.trials(mcm.trial.code, expand.grid(scale = 'emotion', samegender = 'same',
-                                   word = c(sample(neg.new)[1:NOF.ITEMS], sample(neu.new)[1:NOF.ITEMS], sample(pos.new)[1:NOF.ITEMS])),
+                                   word = as.vector(as.matrix(d[memset2,]))),
            record.session = T,
            condition = cnd)
 
