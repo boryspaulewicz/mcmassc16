@@ -110,9 +110,37 @@ gui.show.instruction("Teraz rozpocznie się etap polegający na wypełnieniu kil
 
 gui.show.instruction('Skala, która się za chwilę pojawi, składa się ze słów nazywających różne emocje i uczucia. Przeczytaj każde słowo i zastanów się jak się czujesz ZAZWYCZAJ.')
 
-gui.quest(c('aktywny(a)', '"jak na szpilkach"', 'mocny(a)', 'nerwowy(a)', 'ożywiony(a)', 'pełen (pełna) zapału', 'przerażony(a)', 'raźny(a)', 'silny(a)', 'winny(a)',
+panas = gui.quest(c('aktywny(a)', '"jak na szpilkach"', 'mocny(a)', 'nerwowy(a)', 'ożywiony(a)', 'pełen (pełna) zapału', 'przerażony(a)', 'raźny(a)', 'silny(a)', 'winny(a)',
             'wystraszony(a)', 'zalękniony(a)', 'zaniepokojony(a)', 'zapalony(a)', 'zawstydzony(a)', 'zdecydowany(a)', 'zdenerwowany(a)', 'zmartwiony(a)', 'żwawy(a)', 'żywy(a)'),
           c('nieznacznie lub wcale', 'trochę', 'umiarkowanie', 'dość mocno', 'bardzo silnie'))
+
+## CES-D
+
+gui.show.instruction(
+    'Proszę zaznaczyć stwierdzenie, które najlepiej opisuje jak często czuł(a) się Pan/Pani lub zachowywał(a) w ten sposób w ciągu ostatniego tygodnia.
+')
+
+cesd = gui.quest(c('Martwiły mnie rzeczy, które zazwyczaj mnie nie martwią.',
+            'Nie chciało mi się jeść, nie miałem(am) apetytu.',
+            'Czułem(am), że nie mogę pozbyć się chandry, smutku, nawet z pomocą rodziny i przyjaciół.',
+            'Wydawało mi się, że jestem gorszym człowiekiem niż inni ludzie.',
+            'Miałem(am) trudności ze skoncentrowaniem myśli na tym co robię.',
+            'Czułem(am) się przygnębiony(a).',
+            'Wszystko, co robiłem(am) przychodziło mi z trudem.',
+            'Patrzyłem(am) z nadzieją i ufnością w przyszłość.',
+            'Uważałem(am), że moje życie jest nieudane.',
+            'Czułem(am) lęk, obawy.',
+            'Żle sypiałem(am).',
+            'Czułem(am) się szczęśliwy(a).',
+            'Byłem(am) bardziej małomówny(a) niż zazwyczaj.',
+            'Czułem(am) się samotny(a).',
+            'Ludzie odnosili się do mnie nieprzyjaźnie.',
+            'Cieszyło mnie życie.',
+            'Miałem(am) napady płaczu.',
+            'Czułem(am) smutek.',
+            'Wydawało mi się, że ludzie mnie nie lubią.',
+            'Nic mi nie wychodziło.'),
+          c('< 1 dzień', '1-2 dni', '3-4 dni', '5-7 dni'))
 
 ## Instrukcja przed etapem zapamiętywania
 
@@ -294,6 +322,18 @@ run.trials(mcm.trial.code, expand.grid(scale = 'emotion', samegender = 'same',
                                    word = as.vector(as.matrix(d[memset2,]))),
            record.session = T,
            condition = cnd)
+
+## Zapamiętujemy dane kwestionariuszowe
+panas = as.list(panas)
+names(panas) = paste('i', 1:length(panas), sep = '')
+panas$session_id = SESSION.ID
+db.create.data.table(panas, 'mcmassc16_panas')
+db.insert.data(panas, 'mcmassc16_panas')
+cesd = as.list(cesd)
+names(cesd) = paste('i', 1:length(cesd), sep = '')
+db.create.data.table(cesd, 'mcmassc16_cesd')
+cesd$session_id = SESSION.ID
+db.insert.data(cesd, 'mcmassc16_cesd')
 
 ## Koniec
 if(!interactive())quit("no")
