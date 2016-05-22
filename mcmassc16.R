@@ -102,7 +102,7 @@ if(is.null(USER.DATA$name)){
 Za chwilę zostaniesz poproszona/y o podanie danych: wieku, płci oraz pseudonimu.  Pseudonim składa się z inicjałów (małymi literami) oraz czterech cyfr: dnia i miesiąca urodzenia (np.  ms0706).")
 gui.user.data() }
 
-cnd = 'recognition' ## db.random.condition(c('recognition', 'recall'))
+cnd = db.random.condition(c('recognition', 'recall'))
 
 gui.show.instruction("Teraz rozpocznie się etap polegający na wypełnieniu kilku kwestionariuszy. W każdym z kwestionariuszy prosimy zapoznać się z instrukcją.")
 
