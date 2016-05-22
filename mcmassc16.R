@@ -340,5 +340,9 @@ db.create.data.table(cesd, 'mcmassc16_cesd')
 cesd$session_id = SESSION.ID
 db.insert.data(cesd, 'mcmassc16_cesd')
 
+gui.show.instruction('Dziękujemy za udział w badaniu.
+
+Proszę poczekać na swoim miejscu, aż osoba prowadząca badanie podejdzie i udzieli dalszych instrukcji.')
+
 ## Koniec
 if(!interactive())quit("no")
