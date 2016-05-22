@@ -23,6 +23,7 @@ scales = list(emotion = c('', 'Bardzo negatywne', 'Negatywne', 'Neutralne', 'Poz
 
 ## Test pamięciowy - ocena walencji ze stałym czasem ekspozycji
 mcm.trial.code = function(trial, word = 'test', samegender = 'same', scale = 'emotion'){
+    word = as.character(word)
     ## Kod specyficzny dla zadania
     ## ...
     ## Szablon
@@ -34,7 +35,6 @@ mcm.trial.code = function(trial, word = 'test', samegender = 'same', scale = 'em
        ((samegender != 'same') && (USER.DATA$gender == 'M'))){
         word = str_replace_all(word, 'y$', 'a')
         word = str_replace_all(word, 'i$', 'a')
-        if(word == 'mysa')word = 'mysia'
     }
     start = CLOCK$time
     while(WINDOW$is.open()){
@@ -102,7 +102,7 @@ if(is.null(USER.DATA$name)){
 Za chwilę zostaniesz poproszona/y o podanie danych: wieku, płci oraz pseudonimu.  Pseudonim składa się z inicjałów (małymi literami) oraz czterech cyfr: dnia i miesiąca urodzenia (np.  ms0706).")
 gui.user.data() }
 
-cnd = db.random.condition(c('recognition', 'recall'))
+cnd = 'recognition' ## db.random.condition(c('recognition', 'recall'))
 
 gui.show.instruction("Teraz rozpocznie się etap polegający na wypełnieniu kilku kwestionariuszy. W każdym z kwestionariuszy prosimy zapoznać się z instrukcją.")
 
@@ -289,7 +289,7 @@ Proszę nacisnąć przycisk 'Dalej' w dolnej części okna, aby rozpocząć etap
         }
     }
 
-gui.show.instruction("Teraz nastąpi kolejny etap zadania. Obok każdego słowa zapisanego na kartce proszę zaznaczyć, na ile jesteś pewna/pewien, że to słowo było (lub nie było) prezentowane wcześniej w zestawie do zapamiętania.
+    gui.show.instruction("Teraz nastąpi kolejny etap zadania. Obok każdego słowa zapisanego na kartce proszę zaznaczyć, na ile jesteś pewna/pewien, że to słowo było (lub nie było) prezentowane wcześniej w zestawie do zapamiętania.
 
 1 oznacza, że nie jesteś W OGÓLE pewna/pewny
 
@@ -314,20 +314,25 @@ Pozycja kursora przy ocenie słów ma znaczenie - pozycja skrajnie z lewej stron
 
 Samo położenie kursora myszki nie wystarczy, należy jeszcze potwierdzić ocenę klikając lewy przycisk myszki.")
 
+NOF.ITEMS = 10
+FIXATION.TIME = 1000
+POST.FIXATION.TIME = 1000
+PRESENTATION.TIME = 5000
+QUICK.SCALE = T ## Nie czekamy aż minie presentation time
+
 scales = list(emotion = c('', 'Na pewno nie było', 'Raczej nie było', 'Nie wiem', 'Raczej było', 'Na pewno było'))
-QUICK.SCALE = T
 ## Tutaj dajemy wszystkie stare i taką samą liczbę nowych bodźców
-memset2 = c(memset, sample((1:nrow(d))[-memset], NOF.ITEMS))
+memset2 = c(memset, sample((1:nrow(words))[-memset], NOF.ITEMS))
 run.trials(mcm.trial.code, expand.grid(scale = 'emotion', samegender = 'same',
-                                   word = as.vector(as.matrix(d[memset2,]))),
+                                   word = as.vector(as.matrix(words[memset2,]))),
            record.session = T,
            condition = cnd)
 
 ## Zapamiętujemy dane kwestionariuszowe
 panas = as.list(panas)
 names(panas) = paste('i', 1:length(panas), sep = '')
-panas$session_id = SESSION.ID
 db.create.data.table(panas, 'mcmassc16_panas')
+panas$session_id = SESSION.ID
 db.insert.data(panas, 'mcmassc16_panas')
 cesd = as.list(cesd)
 names(cesd) = paste('i', 1:length(cesd), sep = '')
