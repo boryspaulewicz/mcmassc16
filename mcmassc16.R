@@ -14,9 +14,6 @@ QUICK.SCALE = F ## czekamy, aż minie presentation time, zanim zniknie oceniane 
 
 words = readRDS('slowa.RDS')
 
-WINDOW$set.visible(T)
-WINDOW$set.mouse.cursor.visible(T)
-
 FX = fixation(WINDOW, size = .02)
 
 scales = list(emotion = c('', 'Bardzo negatywne', 'Negatywne', 'Neutralne', 'Pozytywne', 'Bardzo pozytywne'))
@@ -338,6 +335,8 @@ QUICK.SCALE = T ## Nie czekamy aż minie presentation time
 scales = list(emotion = c('', 'Na pewno nie było', 'Raczej nie było', 'Nie wiem', 'Raczej było', 'Na pewno było'))
 ## Tutaj dajemy wszystkie stare i taką samą liczbę nowych bodźców
 memset2 = c(memset, sample((1:nrow(words))[-memset], NOF.ITEMS))
+## Dla potrzeb testowania
+print(list(memset, memset2))
 TASK.NAME <<- 'mcmassc16_recognition'
 run.trials(mcm.trial.code, expand.grid(scale = 'emotion', samegender = 'same',
                                    word = as.vector(as.matrix(words[memset2,]))),
