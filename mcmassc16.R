@@ -3,7 +3,7 @@
 ## Procedura: każda osoba ma oceniać i zapamiętać 30 przymiotników
 ## neg, neu i poz. Czas prezentacji każdego słowa jest stały.
 ##
-if(interactive())source('/taskdata/task/task.R')
+if(interactive())source('~/cs/code/r/tasks/task/task.R')
 TASK.NAME <<- 'mcmassc16'
 
 NOF.ITEMS = 10
@@ -34,8 +34,12 @@ mcm.trial.code = function(trial, word = 'test', samegender = 'same', scale = 'em
     ## Ewentualna zmiana genderu słowa
     if(((samegender == 'same') && (USER.DATA$gender == 'K')) ||
        ((samegender != 'same') && (USER.DATA$gender == 'M'))){
-        word = str_replace_all(word, 'y$', 'a')
-        word = str_replace_all(word, 'i$', 'a')
+        if(word == 'głupi'){
+            word = 'głupia'
+        }else{
+            word = str_replace_all(word, 'y$', 'a')
+            word = str_replace_all(word, 'i$', 'a')
+        }
     }
     start = CLOCK$time
     while(WINDOW$is.open()){
@@ -109,43 +113,47 @@ if(USER.DATA$name == 'admin'){
     cnd = db.random.condition(c('recognition', 'recall'))
 }
 
-gui.show.instruction("Teraz rozpocznie się etap polegający na wypełnieniu kilku kwestionariuszy. W każdym z kwestionariuszy prosimy zapoznać się z instrukcją.")
+if(USER.DATA$name != 'admin'){
 
-## PANAS-C
-
-gui.show.instruction('Skala, która się za chwilę pojawi, składa się ze słów nazywających różne emocje i uczucia. Przeczytaj każde słowo i zastanów się jak się czujesz ZAZWYCZAJ.')
-
-panas = gui.quest(c('aktywny(a)', '"jak na szpilkach"', 'mocny(a)', 'nerwowy(a)', 'ożywiony(a)', 'pełen (pełna) zapału', 'przerażony(a)', 'raźny(a)', 'silny(a)', 'winny(a)',
-            'wystraszony(a)', 'zalękniony(a)', 'zaniepokojony(a)', 'zapalony(a)', 'zawstydzony(a)', 'zdecydowany(a)', 'zdenerwowany(a)', 'zmartwiony(a)', 'żwawy(a)', 'żywy(a)'),
-          c('nieznacznie lub wcale', 'trochę', 'umiarkowanie', 'dość mocno', 'bardzo silnie'))
-
-## CES-D
-
-gui.show.instruction(
-    'Proszę zaznaczyć stwierdzenie, które najlepiej opisuje jak często czuł(a) się Pan/Pani lub zachowywał(a) w ten sposób w ciągu ostatniego tygodnia.
+    gui.show.instruction("Teraz rozpocznie się etap polegający na wypełnieniu kilku kwestionariuszy. W każdym z kwestionariuszy prosimy zapoznać się z instrukcją.")
+    
+    ## PANAS-C
+    
+    gui.show.instruction('Skala, która się za chwilę pojawi, składa się ze słów nazywających różne emocje i uczucia. Przeczytaj każde słowo i zastanów się jak się czujesz ZAZWYCZAJ.')
+    
+    panas = gui.quest(c('aktywny(a)', '"jak na szpilkach"', 'mocny(a)', 'nerwowy(a)', 'ożywiony(a)', 'pełen (pełna) zapału', 'przerażony(a)', 'raźny(a)', 'silny(a)', 'winny(a)',
+                        'wystraszony(a)', 'zalękniony(a)', 'zaniepokojony(a)', 'zapalony(a)', 'zawstydzony(a)', 'zdecydowany(a)', 'zdenerwowany(a)', 'zmartwiony(a)', 'żwawy(a)', 'żywy(a)'),
+                      c('nieznacznie lub wcale', 'trochę', 'umiarkowanie', 'dość mocno', 'bardzo silnie'))
+    
+    ## CES-D
+    
+    gui.show.instruction(
+        'Proszę zaznaczyć stwierdzenie, które najlepiej opisuje jak często czuł(a) się Pan/Pani lub zachowywał(a) w ten sposób w ciągu ostatniego tygodnia.
 ')
+    
+    cesd = gui.quest(c('Martwiły mnie rzeczy, które zazwyczaj mnie nie martwią.',
+                       'Nie chciało mi się jeść, nie miałem(am) apetytu.',
+                       'Czułem(am), że nie mogę pozbyć się chandry, smutku, nawet z pomocą rodziny i przyjaciół.',
+                       'Wydawało mi się, że jestem gorszym człowiekiem niż inni ludzie.',
+                       'Miałem(am) trudności ze skoncentrowaniem myśli na tym co robię.',
+                       'Czułem(am) się przygnębiony(a).',
+                       'Wszystko, co robiłem(am) przychodziło mi z trudem.',
+                       'Patrzyłem(am) z nadzieją i ufnością w przyszłość.',
+                       'Uważałem(am), że moje życie jest nieudane.',
+                       'Czułem(am) lęk, obawy.',
+                       'Żle sypiałem(am).',
+                       'Czułem(am) się szczęśliwy(a).',
+                       'Byłem(am) bardziej małomówny(a) niż zazwyczaj.',
+                       'Czułem(am) się samotny(a).',
+                       'Ludzie odnosili się do mnie nieprzyjaźnie.',
+                       'Cieszyło mnie życie.',
+                       'Miałem(am) napady płaczu.',
+                       'Czułem(am) smutek.',
+                       'Wydawało mi się, że ludzie mnie nie lubią.',
+                       'Nic mi nie wychodziło.'),
+                     c('< 1 dzień', '1-2 dni', '3-4 dni', '5-7 dni'))
 
-cesd = gui.quest(c('Martwiły mnie rzeczy, które zazwyczaj mnie nie martwią.',
-            'Nie chciało mi się jeść, nie miałem(am) apetytu.',
-            'Czułem(am), że nie mogę pozbyć się chandry, smutku, nawet z pomocą rodziny i przyjaciół.',
-            'Wydawało mi się, że jestem gorszym człowiekiem niż inni ludzie.',
-            'Miałem(am) trudności ze skoncentrowaniem myśli na tym co robię.',
-            'Czułem(am) się przygnębiony(a).',
-            'Wszystko, co robiłem(am) przychodziło mi z trudem.',
-            'Patrzyłem(am) z nadzieją i ufnością w przyszłość.',
-            'Uważałem(am), że moje życie jest nieudane.',
-            'Czułem(am) lęk, obawy.',
-            'Żle sypiałem(am).',
-            'Czułem(am) się szczęśliwy(a).',
-            'Byłem(am) bardziej małomówny(a) niż zazwyczaj.',
-            'Czułem(am) się samotny(a).',
-            'Ludzie odnosili się do mnie nieprzyjaźnie.',
-            'Cieszyło mnie życie.',
-            'Miałem(am) napady płaczu.',
-            'Czułem(am) smutek.',
-            'Wydawało mi się, że ludzie mnie nie lubią.',
-            'Nic mi nie wychodziło.'),
-          c('< 1 dzień', '1-2 dni', '3-4 dni', '5-7 dni'))
+} ## kwestionariusze dla nie-adminów
 
 ## Instrukcja przed etapem zapamiętywania
 
@@ -330,7 +338,6 @@ QUICK.SCALE = T ## Nie czekamy aż minie presentation time
 scales = list(emotion = c('', 'Na pewno nie było', 'Raczej nie było', 'Nie wiem', 'Raczej było', 'Na pewno było'))
 ## Tutaj dajemy wszystkie stare i taką samą liczbę nowych bodźców
 memset2 = c(memset, sample((1:nrow(words))[-memset], NOF.ITEMS))
-print(as.vector(as.matrix(words[memset2,])))
 TASK.NAME <<- 'mcmassc16_recognition'
 run.trials(mcm.trial.code, expand.grid(scale = 'emotion', samegender = 'same',
                                    word = as.vector(as.matrix(words[memset2,]))),
