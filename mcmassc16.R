@@ -3,7 +3,7 @@
 ## Procedura: każda osoba ma oceniać i zapamiętać 30 przymiotników
 ## neg, neu i poz. Czas prezentacji każdego słowa jest stały.
 ##
-if(interactive())source('~/cs/code/r/tasks/task/task.R')
+if(interactive())source('/taskdata/task/task.R')
 TASK.NAME <<- 'mcmassc16'
 
 NOF.ITEMS = 10
@@ -198,6 +198,7 @@ leftright.trial.code = function(trial, side = 'left'){
     ## ...
     ## Szablon
     if(trial == 1){
+        
         state = 'press-space'
     }else{ state = 'show-fixation' }
     if(WINDOW$is.open())process.inputs()
@@ -292,6 +293,7 @@ Proszę nacisnąć przycisk 'Dalej' w dolnej części okna, aby rozpocząć etap
             WINDOW$display()
         }
     }
+    WINDOW$set.visible(F)
 
     gui.show.instruction("Teraz nastąpi kolejny etap zadania. Obok każdego słowa zapisanego na kartce proszę zaznaczyć, na ile jesteś pewna/pewien, że to słowo było (lub nie było) prezentowane wcześniej w zestawie do zapamiętania.
 
@@ -327,6 +329,8 @@ QUICK.SCALE = T ## Nie czekamy aż minie presentation time
 scales = list(emotion = c('', 'Na pewno nie było', 'Raczej nie było', 'Nie wiem', 'Raczej było', 'Na pewno było'))
 ## Tutaj dajemy wszystkie stare i taką samą liczbę nowych bodźców
 memset2 = c(memset, sample((1:nrow(words))[-memset], NOF.ITEMS))
+print(as.vector(as.matrix(words[memset2,])))
+TASK.NAME <<- 'mcmassc16_recognition'
 run.trials(mcm.trial.code, expand.grid(scale = 'emotion', samegender = 'same',
                                    word = as.vector(as.matrix(words[memset2,]))),
            record.session = T,
