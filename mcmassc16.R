@@ -344,17 +344,19 @@ run.trials(mcm.trial.code, expand.grid(scale = 'emotion', samegender = 'same',
            record.session = T,
            condition = cnd)
 
-## Zapamiętujemy dane kwestionariuszowe
-panas = as.list(panas)
-names(panas) = paste('i', 1:length(panas), sep = '')
-db.create.data.table(panas, 'mcmassc16_panas')
-panas$session_id = SESSION.ID
-db.insert.data(panas, 'mcmassc16_panas')
-cesd = as.list(cesd)
-names(cesd) = paste('i', 1:length(cesd), sep = '')
-db.create.data.table(cesd, 'mcmassc16_cesd')
-cesd$session_id = SESSION.ID
-db.insert.data(cesd, 'mcmassc16_cesd')
+if(USER.DATA$name != 'admin'){
+    ## Zapamiętujemy dane kwestionariuszowe
+    panas = as.list(panas)
+    names(panas) = paste('i', 1:length(panas), sep = '')
+    db.create.data.table(panas, 'mcmassc16_panas')
+    panas$session_id = SESSION.ID
+    db.insert.data(panas, 'mcmassc16_panas')
+    cesd = as.list(cesd)
+    names(cesd) = paste('i', 1:length(cesd), sep = '')
+    db.create.data.table(cesd, 'mcmassc16_cesd')
+    cesd$session_id = SESSION.ID
+    db.insert.data(cesd, 'mcmassc16_cesd')
+}
 
 gui.show.instruction('Dziękujemy za udział w badaniu.
 
