@@ -28,6 +28,7 @@ mcm.trial.code = function(trial, word = 'test', samegender = 'same', scale = 'em
     ## ...
     ## Szablon
     if(trial == 1){
+        WINDOW$set.mouse.cursor.visible(T)
         state = 'press-space'
     }else{ state = 'show-fixation' }
     ## Ewentualna zmiana genderu słowa
