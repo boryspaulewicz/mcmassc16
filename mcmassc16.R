@@ -299,6 +299,7 @@ Proszę nacisnąć przycisk 'Dalej' w dolnej części okna, aby rozpocząć etap
             WINDOW$display()
         }
     }
+    TXT$set.color(c(1, 1, 1))
     WINDOW$set.visible(F)
 
     gui.show.instruction("Teraz nastąpi kolejny etap zadania. Obok każdego słowa zapisanego na kartce proszę zaznaczyć, na ile jesteś pewna/pewien, że to słowo było (lub nie było) prezentowane wcześniej w zestawie do zapamiętania.
