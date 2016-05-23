@@ -198,7 +198,7 @@ leftright.trial.code = function(trial, side = 'left'){
     ## ...
     ## Szablon
     if(trial == 1){
-        
+        WINDOW$set.mouse.cursor.visible(F)
         state = 'press-space'
     }else{ state = 'show-fixation' }
     if(WINDOW$is.open())process.inputs()
