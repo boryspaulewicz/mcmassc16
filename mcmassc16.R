@@ -104,7 +104,7 @@ if(is.null(USER.DATA$name)){
 
     gui.show.instruction("W czasie eksperymentu obowiązuje cisza. Wyłącz telefon komórkowy. W razie jakichkolwiek wątpliwości nie wołaj osoby prowadzącej, tylko podnieś do góry rękę.  Osoba prowadząca podejdzie w dogodnym momencie i postara się udzielić wszelkich wyjaśnień.  Badanie jest anonimowe.
 
-Za chwilę zostaniesz poproszona/y o podanie danych: wieku, płci oraz pseudonimu.  Pseudonim składa się z inicjałów (małymi literami) oraz czterech cyfr: dnia i miesiąca urodzenia (np.  ms0706).")
+Za chwilę zostaniesz poproszona/y o podanie danych: wieku, płci oraz pseudonimu.  Pseudonim składa się z inicjałów (małymi literami) oraz czterech cyfr: dnia i miesiąca urodzenia (np.  ms0706). Proszę nie używać w inicjałach polskich znaków diakrytycznych (ą, ć, itd).")
 gui.user.data() }
 
 if(USER.DATA$name == 'admin'){
